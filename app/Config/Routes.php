@@ -40,6 +40,21 @@ $routes->post('/users/add', 'Users::createUsers');
 $routes->post('/users/update-active', 'Users::isactivedusers');
 
 
+#=================== data supplier =============================#
+$routes->get('/supplier', 'Home::supplier');
+$routes->post('/supplier/add', 'Supplier::createSupplier');
+$routes->delete('/supplier/delete', 'Supplier::delete');
+$routes->post('/supplier/update', 'Supplier::update');
+
+
+// /get-transaction-details'
+#================ data transaksi pembelian barang ======================
+$routes->get('/transaksi-pembelian', 'Home::transaksiPembelian');
+$routes->get('/product-by-supplier', 'Product::productBySupplierId');
+$routes->get('/get-transaction-details', 'Transaksi::transaksiDetail');
+$routes->post('/submit-transaction', 'Transaksi::submitTransaction');
+
+
 // isactivedusers
 // product/delete createUsers
 

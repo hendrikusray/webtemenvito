@@ -89,6 +89,37 @@
                                         <p>Data User</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="/supplier" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Data Supplier</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    Transaksi
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/transaksi-pembelian" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Pembelian Barang</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/barang" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Penjualan Barang</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>

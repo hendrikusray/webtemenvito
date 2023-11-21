@@ -72,7 +72,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/barang" class="nav-link active">
+                                    <a href="/barang" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Barang</p>
                                     </a>
@@ -90,7 +90,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/supplier" class="nav-link">
+                                    <a href="/supplier" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Supplier</p>
                                     </a>
@@ -168,13 +168,9 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Nama</th>
-                                                <th>Gambar</th>
-                                                <th>Harga</th>
-                                                <th>Stock</th>
-                                                <th>Jenis Produk</th>
-                                                <th>Diskon</th>
-                                                <th>Supplier</th>
+                                                <th>Nama Supplier</th>
+                                                <th>Alamat Supplier</th>
+                                                <th>No Telpon Supplier</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -208,43 +204,24 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Product</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Supplier</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="layananForm" enctype="multipart/form-data">
                             <div class="mb-3">
-                                <label for="nama_produk" class="col-form-label">Product Name:</label>
-                                <input type="text" class="form-control" id="nama_produk" name="nama_produk">
+                                <label for="nama" class="col-form-label">Nama Supplier:</label>
+                                <input type="text" class="form-control" id="nama" name="nama">
                             </div>
                             <div class="mb-3">
-                                <label for="jenis_produk" class="col-form-label">Product Type:</label>
-                                <textarea class="form-control" id="jenis_produk" name="jenis_produk"></textarea>
+                                <label for="alamat" class="col-form-label">Alamat Supplier:</label>
+                                <textarea class="form-control" id="alamat" name="alamat"></textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="harga_produk" class="col-form-label">Product Price:</label>
-                                <input type="number" class="form-control" id="harga_produk" name="harga_produk">
+                                <label for="no_hp" class="col-form-label">No HP Supplier:</label>
+                                <input type="text" class="form-control" id="no_hp" name="no_hp">
                             </div>
-                            <div class="mb-3">
-                                <label for="jumlah_stok" class="col-form-label">Stock Quantity:</label>
-                                <input type="number" class="form-control" id="jumlah_stok" name="jumlah_stok">
-                            </div>
-                            <div class="mb-3">
-                                <label for="jumlah_stok" class="col-form-label">diskon:</label>
-                                <input type="number" class="form-control" id="diskon" name="jumlah_stok">
-                            </div>
-                            <div class="mb-3">
-                                <label for="role_user" class="col-form-label">Supplier:</label>
-                                <select class="form-select" id="supplier_id" name="supplier_id">
-                                    <?php foreach ($supplier as $su) : ?>
-                                        <option value="<?= $su['id_supplier'] ?>"><?= $su['nama'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="foto" class="col-form-label">Product Photo:</label>
-                                <input type="file" class="form-control" id="foto" name="foto">
-                            </div>
+
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -270,7 +247,7 @@
 
     <?php include APPPATH . 'views/footer.php'; ?>
     <script>
-        function deleteProduct(id_layanan) {
+        function deleteSupplier(id_supplier) {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Anda tidak akan dapat mengembalikan ini!",
@@ -284,11 +261,11 @@
                 // If the user clicks "Yes," proceed with deletion
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '<?= base_url('product/delete') ?>',
+                        url: '<?= base_url('supplier/delete') ?>',
                         type: 'DELETE',
                         dataType: 'json',
                         data: {
-                            id: id_layanan
+                            id: id_supplier
                         },
                         success: function(response) {
                             if (response.success) {
@@ -301,7 +278,7 @@
                                     backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                                     stopOnFocus: true,
                                     callback: function() {
-                                        window.location.href = "/barang";
+                                        window.location.href = "/supplier";
                                     }
                                 }).showToast();
                             } else {
@@ -324,43 +301,43 @@
             });
         }
 
-        function showDetailProduct(id_product, nama_product, jenis_product, harga_product, gambar_product, diskon) {
+        function showDetailSupplier(id_supplier, nama_supplier, alamat_supplier, no_hp) {
             Swal.fire({
-                title: 'Detail Layanan',
+                title: 'Detail Supplier',
                 html: `
             <table style="width: 100%; text-align: left;">
                 <tr>
-                    <td colspan="2" style="text-align: center;"><img src="${gambar_product}" style="max-width: 200px; max-height: 200px;"/></td>
+                    <td><strong>ID Supplier:</strong></td>
+                    <td>${id_supplier}</td>
                 </tr>
                 <tr>
-                    <td><strong>ID Product:</strong></td>
-                    <td>${id_product}</td>
+                    <td><strong>Nama Supplier:</strong></td>
+                    <td>${nama_supplier}</td>
                 </tr>
                 <tr>
-                    <td><strong>Nama Product:</strong></td>
-                    <td>${nama_product}</td>
+                    <td><strong>Alamat Supplier:</strong></td>
+                    <td>${alamat_supplier}</td>
                 </tr>
                 <tr>
-                    <td><strong>Jenis Product:</strong></td>
-                    <td>${jenis_product}</td>
-                </tr>
-                <tr>
-                    <td><strong>Harga Product:</strong></td>
-                    <td>Rp. ${harga_product}</td>
-                </tr>
-                <tr>
-                    <td><strong>Diskon:</strong></td>
-                    <td>${diskon}</td>
+                    <td><strong>No Hp Supplier:</strong></td>
+                    <td>${no_hp}</td>
                 </tr>
             </table>
         `,
-                icon: 'info',
                 showCloseButton: true,
                 showCancelButton: false,
                 focusConfirm: false,
                 confirmButtonText: 'OK',
             });
         }
+
+
+        $('#no_hp').on('input', function() {
+            // Menghapus karakter selain angka menggunakan regular expression
+            $(this).val(function(_, value) {
+                return value.replace(/\D/g, '');
+            });
+        });
 
 
         $(document).ready(function() {
@@ -376,71 +353,51 @@
 
             <?php $index = 1; ?>
 
-
-            <?php foreach ($products as $product) : ?>
+            <?php foreach ($supplier as $suppliers) : ?>
                 <?php
-                $id_produk = esc($product['id_product']);
+                $id_supplier = esc($suppliers['id_supplier']);
                 $id = $index++;
-                $nama_produk = esc($product['nama_product']);
-                $harga_produk = esc($product['harga_product']);
-                $jumlah_stok = esc($product['stock']);
-                $jenis_produk = esc($product['jenis_product']);
-                $gambar_produk = esc($product['gambar_product']);
-                $diskon = esc($product['diskon']);
-                $nama_suppier = esc($product['nama']);
-                $id_supplier = esc($product['id_supplier']);
+                $nama_supplier = esc($suppliers['nama']);
+                $alamat_supplier = esc($suppliers['alamat_supplier']);
+                $no_hp_supplier =  esc($suppliers['no_telp_supplier']);
                 ?>
                 table.row.add([
                     '<?= $id ?>',
-                    '<?= $nama_produk ?>',
-                    '<img src="<?= base_url('writable/uploads/' . $gambar_produk) ?>" style="max-width: 100px; max-height: 100px;">',
-                    '<?= $harga_produk ?>',
-                    '<?= $jumlah_stok ?>',
-                    '<?= $jenis_produk ?>',
-                    '<?= $diskon ?>',
-                    '<?= $nama_suppier ?>',
-                    '<a href="javascript:void(0);" class="delete-link" data-id="<?= $id_produk ?>"><i class="fa fa-trash" aria-hidden="true"></i> Hapus</a> | <a href="javascript:void(0);" class="detail-link" data-id="<?= $id_produk ?>"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Detail</a> | <a href="javascript:void(0);" class="edit-link" data-id_supplier="<?= $id_supplier ?>" data-id="<?= $id_produk ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>'
+                    '<?= $nama_supplier ?>',
+                    '<?= $alamat_supplier ?>',
+                    '<?= $no_hp_supplier ?>',
+                    '<a href="javascript:void(0);" class="delete-link" data-id="<?= $id_supplier ?>"><i class="fa fa-trash" aria-hidden="true"></i> Hapus</a> | <a href="javascript:void(0);" class="detail-link" data-id="<?= $id_supplier ?>"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Detail</a> | <a href="javascript:void(0);" class="edit-link" data-id="<?= $id_supplier ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>'
                 ]).draw(false);
             <?php endforeach; ?>
 
             $('#example1 tbody').on('click', 'a.delete-link', function() {
-                var id_layanan = $(this).data('id');
-                deleteProduct(id_layanan);
+                var id_supplier = $(this).data('id');
+                deleteSupplier(id_supplier);
             });
 
             $('#example1 tbody').on('click', 'a.detail-link', function() {
-                var id_product = $(this).data('id');
-                var nama_product = table.row($(this).closest('tr')).data()[1];
-                var harga_product = table.row($(this).closest('tr')).data()[3];
-                var jumlah_stock = table.row($(this).closest('tr')).data()[4];
-                var jenis_product = table.row($(this).closest('tr')).data()[5];
-                var gambar_product = $(this).closest('tr').find('img').attr('src');
-                var diskon = table.row($(this).closest('tr')).data()[6];
+                var id_supplier = $(this).data('id');
+                var nama_supplier = table.row($(this).closest('tr')).data()[1];
+                var alamat_supplier = table.row($(this).closest('tr')).data()[2];
+                var no_hp_supplier = table.row($(this).closest('tr')).data()[3];
 
-                showDetailProduct(id_product, nama_product, jenis_product, harga_product, gambar_product, diskon);
+                showDetailSupplier(id_supplier, nama_supplier, alamat_supplier, no_hp_supplier);
             });
 
             $('#example1 tbody').on('click', 'a.edit-link', function() {
-                var id_product = $(this).data('id');
-                var id_supplier = $(this).data('id_supplier');
-                var nama_product = table.row($(this).closest('tr')).data()[1];
-                var harga_product = table.row($(this).closest('tr')).data()[3];
-                var jumlah_stock = table.row($(this).closest('tr')).data()[4];
-                var jenis_product = table.row($(this).closest('tr')).data()[5];
-                var gambar_product = $(this).closest('tr').find('img').attr('src');
-                var diskon = table.row($(this).closest('tr')).data()[6];
-                var supplier_name = table.row($(this).closest('tr')).data()[7];
+                var id_supplier = $(this).data('id');
+                var nama = table.row($(this).closest('tr')).data()[1];
+                var alamat = table.row($(this).closest('tr')).data()[2];
+                var no_hp = table.row($(this).closest('tr')).data()[3];
+                
 
                 // Populate the modal with the existing data
-                $('#nama_produk').val(nama_product);
-                $('#jenis_produk').val(jenis_product);
-                $('#harga_produk').val(harga_product);
-                $('#jumlah_stok').val(jumlah_stock);
-                $('#diskon').val(diskon);
-                $('#supplier_id').val(id_supplier);
+                $('#nama').val(nama);
+                $('#alamat').val(alamat);
+                $('#no_hp').val(no_hp);
 
                 // Update the submit button to act as an update button
-                $('#submitBtn').text('Update').data('id', id_product);
+                $('#submitBtn').text('Update').data('id', id_supplier);
 
                 // Show the modal
                 $('#exampleModal').modal('show');
@@ -450,12 +407,10 @@
                 var form = document.getElementById('layananForm');
                 var formData = new FormData(form);
 
-                var id_produk = $(this).data('id');
-                var actionUrl = id_produk ? '<?= base_url('/layanan/update') ?>' : '<?= base_url('layanan/add') ?>';
+                var id_supplier = $(this).data('id');
+                var actionUrl = id_supplier ? '<?= base_url('/supplier/update') ?>' : '<?= base_url('supplier/add') ?>';
 
-                formData.append('id_produk', id_produk);
-                formData.append('type', 2);
-
+                formData.append('id_supplier', id_supplier);
 
                 $.ajax({
                     url: actionUrl,
@@ -465,7 +420,7 @@
                     processData: false,
                     success: function(data) {
                         Toastify({
-                            text: id_produk ? "berhasil edit barang" : "berhasil menambahkan barang",
+                            text: id_supplier ? "berhasil edit supplier" : "berhasil menambahkan supplier",
                             duration: 3000,
                             close: true,
                             gravity: "top",
@@ -473,7 +428,7 @@
                             backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                             stopOnFocus: true,
                             callback: function() {
-                                window.location.href = "/barang";
+                                window.location.href = "/supplier";
                             }
                         }).showToast();
                     },

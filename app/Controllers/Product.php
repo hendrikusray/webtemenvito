@@ -3,9 +3,12 @@
 namespace App\Controllers;
 
 use App\Models\ProductModel;
+use CodeIgniter\API\ResponseTrait;
 
 class Product extends BaseController
 {
+    use ResponseTrait;
+
     public function index(): string
     {
         return view('page/index');
@@ -22,6 +25,7 @@ class Product extends BaseController
         $jumlah_stok = $request->getPost('jumlah_stok');
         $type = $request->getPost('type');
         $diskon = $request->getPost('diskon');
+        $id_supplier = $request->getPost('supplier_id');
 
         // Handle file upload
         $foto = $this->request->getFile('foto');
@@ -43,7 +47,8 @@ class Product extends BaseController
             'stock' => $jumlah_stok,
             'diskon' => $diskon,
             'gambar_product' => $fotoName,
-            'jenis_product' => $jenis_produk
+            'jenis_product' => $jenis_produk,
+            'supplier_id' => $id_supplier
         ];
 
         $builder->insert($data);
@@ -94,6 +99,7 @@ class Product extends BaseController
         $harga_produk = $request->getPost('harga_produk');
         $diskon = $request->getPost('diskon');
         $jumlah_stok = $request->getPost('jumlah_stok');
+        $supplier_id = $request->getPost('supplier_id');
 
         // Handle file upload
         $foto = $this->request->getFile('foto');
@@ -117,6 +123,7 @@ class Product extends BaseController
             'harga_product' => $harga_produk,
             'stock' => $jumlah_stok,
             'diskon' => $diskon,
+            'supplier_id' => $supplier_id
         ];
 
         // Check if a new photo is uploaded
@@ -130,4 +137,24 @@ class Product extends BaseController
         // Return a JSON response (you might want to customize this based on your needs)
         return $this->response->setJSON(['success' => true, 'message' => 'Product successfully updated']);
     }
+
+    public function productBySupplierId()
+    {
+        $produkModel = new ProductModel();
+
+        // Get supplier_id from the query parameters
+        $supplierId = $this->request->getGet('supplier_id');
+
+        // Validate if supplier_id is provided
+        if (!$supplierId) {
+            return $this->fail('Supplier ID is required.', 400);
+        }
+
+        // Get products based on the specified conditions
+        $products = $produkModel->getProductsBySupplierId($supplierId);
+
+        // Return the result in JSON format
+        return $this->respond($products);
+    }
+    
 }

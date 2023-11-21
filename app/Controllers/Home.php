@@ -6,6 +6,8 @@ use App\Models\ProductModel;
 use App\Models\CustomerModel;
 use App\Models\UsersModel;
 use App\Models\RoleModel;
+use App\Models\SupplierModel;
+use App\Models\TransaksiModel;
 
 class Home extends BaseController
 {
@@ -34,7 +36,9 @@ class Home extends BaseController
     public function product(): string
     {
         $productModel = new ProductModel();
+        $SupplierModel = new SupplierModel();   
         $data['products'] = $productModel->getBarang(); // Assuming you have a method like getAllProducts() in your model
+        $data['supplier'] = $SupplierModel->supplierList();
         return view('page/product', $data);
     }
 
@@ -52,5 +56,21 @@ class Home extends BaseController
         $data['users'] = $customerModel->joinListUsersWithRole();
         $data['roles'] =  $roleModel->getRole();
         return view('page/users', $data);
+    }
+
+    public function supplier(): string
+    {
+        $SupplierModel = new SupplierModel();    
+        $data['supplier'] = $SupplierModel->supplierList();
+        return view('page/supplier', $data);
+    }
+
+    public function transaksiPembelian(): string
+    {
+        $transaksiModel = new TransaksiModel();    
+        $SupplierModel = new SupplierModel();  
+        $data['transaksi'] = $transaksiModel->transaksiList();
+        $data['supplier'] = $SupplierModel->supplierList();
+        return view('page/transaksi_pembelian', $data);
     }
 }

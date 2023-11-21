@@ -91,6 +91,12 @@
                                         <p>Data User</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="/supplier" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Data Supplier</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -105,7 +111,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/dashboard" class="nav-link">
+                                    <a href="/transaksi-pembelian" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Pembelian Barang</p>
                                     </a>
