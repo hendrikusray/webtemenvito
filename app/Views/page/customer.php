@@ -1,5 +1,5 @@
 <?php include APPPATH . 'views/header.php'; ?>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css"> 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
 
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
@@ -72,13 +72,13 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/barang" class="nav-link active">
+                                    <a href="/barang" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Barang</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/customer" class="nav-link">
+                                    <a href="/customer" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Customer</p>
                                     </a>
@@ -129,7 +129,7 @@
 
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Data Barang</h3>
+                                    <h3 class="card-title">Customer</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
@@ -138,11 +138,10 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama</th>
-                                                <th>Gambar</th>
-                                                <th>Harga</th>
-                                                <th>Stock</th>
-                                                <th>Jenis Produk</th>
-                                                <th>Diskon</th>
+                                                <th>No telp</th>
+                                                <th>Alamat</th>
+                                                <th>Email</th>
+                                                <th>Status Customer</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -182,28 +181,27 @@
                     <div class="modal-body">
                         <form id="layananForm" enctype="multipart/form-data">
                             <div class="mb-3">
-                                <label for="nama_produk" class="col-form-label">Product Name:</label>
-                                <input type="text" class="form-control" id="nama_produk" name="nama_produk">
+                                <label for="name_customer" class="col-form-label">Name Customer:</label>
+                                <input type="text" class="form-control" id="name_customer" name="name_customer">
                             </div>
                             <div class="mb-3">
-                                <label for="jenis_produk" class="col-form-label">Product Type:</label>
-                                <textarea class="form-control" id="jenis_produk" name="jenis_produk"></textarea>
+                                <label for="no_telp_customer" class="col-form-label">No telp:</label>
+                                <input class="form-control" id="no_telp_customer" name="no_telp_customer"></input>
                             </div>
                             <div class="mb-3">
-                                <label for="harga_produk" class="col-form-label">Product Price:</label>
-                                <input type="number" class="form-control" id="harga_produk" name="harga_produk">
+                                <label for="alamat_customer" class="col-form-label">Alamat:</label>
+                                <textarea type="text" class="form-control" id="alamat_customer" name="alamat_customer"> </textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="jumlah_stok" class="col-form-label">Stock Quantity:</label>
-                                <input type="number" class="form-control" id="jumlah_stok" name="jumlah_stok">
+                                <label for="email_customer" class="col-form-label">Email:</label>
+                                <input type="text" class="form-control" id="email_customer" name="email_customer">
                             </div>
                             <div class="mb-3">
-                                <label for="jumlah_stok" class="col-form-label">diskon:</label>
-                                <input type="number" class="form-control" id="diskon" name="jumlah_stok">
-                            </div>
-                            <div class="mb-3">
-                                <label for="foto" class="col-form-label">Product Photo:</label>
-                                <input type="file" class="form-control" id="foto" name="foto">
+                                <label for="status_customer" class="col-form-label">Status:</label>
+                                <select class="form-select" id="status_customer" name="status_customer">
+                                    <option value="1" selected>Aktif</option>
+                                    <option value="0">Tidak Aktif</option>
+                                </select>
                             </div>
                         </form>
                     </div>
@@ -230,7 +228,7 @@
 
     <?php include APPPATH . 'views/footer.php'; ?>
     <script>
-        function deleteProduct(id_layanan) {
+        function deleteCustomer(id_customers) {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Anda tidak akan dapat mengembalikan ini!",
@@ -244,7 +242,7 @@
                 // If the user clicks "Yes," proceed with deletion
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '<?= base_url('product/delete') ?>',
+                        url: '<?= base_url('customers/delete') ?>',
                         type: 'DELETE',
                         dataType: 'json',
                         data: {
@@ -284,37 +282,44 @@
             });
         }
 
-        function showDetailProduct(id_product, nama_product, jenis_product, harga_product, gambar_product, diskon) {
+        $('#no_telp_customer').on('input', function() {
+            // Menghapus karakter selain angka menggunakan regular expression
+            $(this).val(function(_, value) {
+                return value.replace(/\D/g, '');
+            });
+        });
+
+        function showDetailCustomer(id_customer, nama, no_telp, alamat, email, is_active) {
             Swal.fire({
-                title: 'Detail Layanan',
+                title: 'Detail Customer',
                 html: `
             <table style="width: 100%; text-align: left;">
                 <tr>
-                    <td colspan="2" style="text-align: center;"><img src="${gambar_product}" style="max-width: 200px; max-height: 200px;"/></td>
+                    <td><strong>ID Customer:</strong></td>
+                    <td>${id_customer}</td>
                 </tr>
                 <tr>
-                    <td><strong>ID Product:</strong></td>
-                    <td>${id_product}</td>
+                    <td><strong>Nama Customer:</strong></td>
+                    <td>${nama}</td>
                 </tr>
                 <tr>
-                    <td><strong>Nama Product:</strong></td>
-                    <td>${nama_product}</td>
+                    <td><strong>No telp:</strong></td>
+                    <td>${no_telp}</td>
                 </tr>
                 <tr>
-                    <td><strong>Jenis Product:</strong></td>
-                    <td>${jenis_product}</td>
+                    <td><strong>Alamat:</strong></td>
+                    <td>Rp. ${alamat}</td>
                 </tr>
                 <tr>
-                    <td><strong>Harga Product:</strong></td>
-                    <td>Rp. ${harga_product}</td>
+                    <td><strong>Email:</strong></td>
+                    <td>${email}</td>
                 </tr>
                 <tr>
-                    <td><strong>Diskon:</strong></td>
-                    <td>${diskon}</td>
+                    <td><strong>Aktif Customer:</strong></td>
+                    <td>${is_active}</td>
                 </tr>
             </table>
         `,
-                icon: 'info',
                 showCloseButton: true,
                 showCancelButton: false,
                 focusConfirm: false,
@@ -334,63 +339,64 @@
                 "autoWidth": false,
             });
 
+
             <?php $index = 1; ?>
 
-            <?php foreach ($products as $product) : ?>
+            <?php foreach ($customers as $cus) : ?>
                 <?php
-                $id_produk = esc($product['id_product']);
+                $id_customers = esc($cus['id_customers']);
                 $id = $index++;
-                $nama_produk = esc($product['nama_product']);
-                $harga_produk = esc($product['harga_product']);
-                $jumlah_stok = esc($product['stock']);
-                $jenis_produk = esc($product['jenis_product']);
-                $gambar_produk = esc($product['gambar_product']);
-                $diskon = esc($product['diskon']);
+                $nama = esc($cus['nama']);
+                $no_telp = esc($cus['no_telp']);
+                $alamat = esc($cus['alamat']);
+                $email = esc($cus['email']);
+                $is_active = esc($cus['is_active']);
+
                 ?>
                 table.row.add([
                     '<?= $id ?>',
-                    '<?= $nama_produk ?>',
-                    '<img src="<?= base_url('writable/uploads/' . $gambar_produk) ?>" style="max-width: 100px; max-height: 100px;">',
-                    '<?= $harga_produk ?>',
-                    '<?= $jumlah_stok ?>',
-                    '<?= $jenis_produk ?>',
-                    '<?= $diskon ?>',
-                    '<a href="javascript:void(0);" class="delete-link" data-id="<?= $id_produk ?>"><i class="fa fa-trash" aria-hidden="true"></i> Hapus</a> | <a href="javascript:void(0);" class="detail-link" data-id="<?= $id_produk ?>"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Detail</a> | <a href="javascript:void(0);" class="edit-link" data-id="<?= $id_produk ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>'
+                    '<?= $nama ?>',
+                    '<?= $no_telp ?>',
+                    '<?= $alamat ?>',
+                    '<?= $email ?>',
+                    '<?= ($is_active == 1) ? "Aktif" : "Tidak Aktif" ?>',
+                    '<a href="javascript:void(0);" class="delete-link" data-id="<?= $id_customers ?>"><i class="fa fa-trash" aria-hidden="true"></i> Hapus</a> | <a href="javascript:void(0);" class="detail-link" data-id="<?= $id_customers ?>"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Detail</a> | <a href="javascript:void(0);" class="edit-link" data-id="<?= $id_customers ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>'
                 ]).draw(false);
             <?php endforeach; ?>
 
+
             $('#example1 tbody').on('click', 'a.delete-link', function() {
-                var id_layanan = $(this).data('id');
-                deleteProduct(id_layanan);
+                var id_customer = $(this).data('id');
+                deleteCustomer(id_customer);
             });
 
             $('#example1 tbody').on('click', 'a.detail-link', function() {
-                var id_product = $(this).data('id');
-                var nama_product = table.row($(this).closest('tr')).data()[1];
-                var harga_product = table.row($(this).closest('tr')).data()[3];
-                var jumlah_stock = table.row($(this).closest('tr')).data()[4];
-                var jenis_product = table.row($(this).closest('tr')).data()[5];
-                var gambar_product = $(this).closest('tr').find('img').attr('src');
-                var diskon = table.row($(this).closest('tr')).data()[6];
+                var id_customer = $(this).data('id');
+                var nama = table.row($(this).closest('tr')).data()[1];
+                var no_telp = table.row($(this).closest('tr')).data()[2];
+                var alamat = table.row($(this).closest('tr')).data()[3];
+                var email = table.row($(this).closest('tr')).data()[4];
+                var is_active = '<?= ($is_active == 1) ? "Aktif" : "Tidak Aktif" ?>'
 
-                showDetailProduct(id_product, nama_product, jenis_product, harga_product, gambar_product, diskon);
+                showDetailCustomer(id_customer, nama, no_telp, alamat, email, is_active);
             });
 
             $('#example1 tbody').on('click', 'a.edit-link', function() {
                 var id_product = $(this).data('id');
-                var nama_product = table.row($(this).closest('tr')).data()[1];
-                var harga_product = table.row($(this).closest('tr')).data()[3];
-                var jumlah_stock = table.row($(this).closest('tr')).data()[4];
-                var jenis_product = table.row($(this).closest('tr')).data()[5];
-                var gambar_product = $(this).closest('tr').find('img').attr('src');
-                var diskon = table.row($(this).closest('tr')).data()[6];
+                var name_customer = table.row($(this).closest('tr')).data()[1];
+                var no_telp = table.row($(this).closest('tr')).data()[2];
+                var alamat = table.row($(this).closest('tr')).data()[3];
+                var email = table.row($(this).closest('tr')).data()[4];
+                var status_customer = table.row($(this).closest('tr')).data()[5]; 
+
+                const status_final = status_customer == 'Aktif' ? 1 : 0
 
                 // Populate the modal with the existing data
-                $('#nama_produk').val(nama_product);
-                $('#jenis_produk').val(jenis_product);
-                $('#harga_produk').val(harga_product);
-                $('#jumlah_stok').val(jumlah_stock);
-                $('#diskon').val(diskon);
+                $('#name_customer').val(name_customer);
+                $('#no_telp_customer').val(no_telp);
+                $('#email_customer').val(email);
+                $('#alamat_customer').val(alamat);
+                $('#status_customer').val(status_final);
 
                 // Update the submit button to act as an update button
                 $('#submitBtn').text('Update').data('id', id_product);
@@ -403,12 +409,10 @@
                 var form = document.getElementById('layananForm');
                 var formData = new FormData(form);
 
-                var id_produk = $(this).data('id');
-                var actionUrl = id_produk ? '<?= base_url('/layanan/update') ?>' : '<?= base_url('layanan/add') ?>';
+                var id_customers = $(this).data('id');
+                var actionUrl = id_customers ? '<?= base_url('/customer/update') ?>' : '<?= base_url('/customer/add') ?>';
 
-                formData.append('id_produk', id_produk);
-                formData.append('type', 2);
-
+                formData.append('id_customers', id_customers);
 
                 $.ajax({
                     url: actionUrl,
@@ -418,7 +422,7 @@
                     processData: false,
                     success: function(data) {
                         Toastify({
-                            text: id_produk ? "berhasil edit barang" : "berhasil menambahkan barang",
+                            text: id_customers ? "berhasil edit customers" : "berhasil menambahkan customers",
                             duration: 3000,
                             close: true,
                             gravity: "top",
@@ -426,7 +430,7 @@
                             backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                             stopOnFocus: true,
                             callback: function() {
-                                window.location.href = "/barang";
+                                window.location.href = "/customer";
                             }
                         }).showToast();
                     },
@@ -438,38 +442,6 @@
                 });
             });
 
-
-            // document.getElementById('submitBtn').addEventListener('click', function() {
-            //     var form = document.getElementById('layananForm');
-            //     var formData = new FormData(form);
-
-            //     $.ajax({
-            //         url: '/product/add',
-            //         type: 'POST',
-            //         data: formData,
-            //         contentType: false,
-            //         processData: false,
-            //         success: function(data) {
-            //             Toastify({
-            //                 text: "berhasil menambahkan barang",
-            //                 duration: 3000,
-            //                 close: true,
-            //                 gravity: "top",
-            //                 position: "right",
-            //                 backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-            //                 stopOnFocus: true,
-            //                 callback: function() {
-            //                     window.location.href = "/dashboard";
-            //                 }
-            //             }).showToast();
-            //         },
-            //         error: function(error) {
-            //             console.error('Error:', error);
-            //             // Handle errors here (e.g., show an error message)
-            //             alert('Error adding product. Please try again.');
-            //         }
-            //     });
-            // });
         });
     </script>
 </body>

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\ProductModel;
 
 class Product extends BaseController
@@ -53,17 +54,29 @@ class Product extends BaseController
     public function delete()
     {
         if ($this->request->isAJAX()) {
-            $id_layanan = $this->request->getPost('id');
+            $rawInput = $this->request->getRawInput();
 
-            $categoryModel = new ProductModel();
-            $result = $categoryModel->deleteLayanan($id_layanan);
+            // Check if it's a JSON string or an array
+            $input = is_array($rawInput) ? $rawInput : json_decode($rawInput, true);
 
-            if ($result) {
-                // Return a JSON response for success
-                return $this->response->setJSON(['success' => true]);
+
+            // Ensure that $input is an array and contains 'id' key
+            if (is_array($input) && array_key_exists('id', $input)) {
+                $id_layanan = $input['id'];
+
+                $categoryModel = new ProductModel();
+                $result = $categoryModel->deleteLayanan($id_layanan);
+
+                if ($result) {
+                    // Return a JSON response for success
+                    return $this->response->setJSON(['success' => true]);
+                } else {
+                    // Return a JSON response for failure
+                    return $this->response->setJSON(['success' => false, 'error' => 'Failed to delete layanan']);
+                }
             } else {
-                // Return a JSON response for failure
-                return $this->response->setJSON(['success' => false, 'error' => 'Failed to delete layanan']);
+                // Handle the case where 'id' is not present in the input
+                return $this->response->setJSON(['success' => false, 'error' => 'Invalid input data']);
             }
         } else {
             // Method not allowed for non-AJAX requests
@@ -117,5 +130,4 @@ class Product extends BaseController
         // Return a JSON response (you might want to customize this based on your needs)
         return $this->response->setJSON(['success' => true, 'message' => 'Product successfully updated']);
     }
-
 }

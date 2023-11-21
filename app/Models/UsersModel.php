@@ -42,6 +42,17 @@ class UsersModel extends Model
         return false;
     }
 
+    public function joinListUsersWithRole()
+    {
+        $builder = $this->db->table('users');
+        $builder->select('users.id_users, users.nama, users.email, users.username,users.is_active, role.nama_role');
+        $builder->join('role', 'users.id_role = role.id_role');
+
+        $query = $builder->get();
+
+        return $query->getResult();
+    }
+
     public function updateUser($id, $data)
     {
         if (!$this->find($id)) {

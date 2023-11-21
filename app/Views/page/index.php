@@ -80,15 +80,40 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/tables/jsgrid.html" class="nav-link">
+                                    <a href="/customer" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Customer</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/tables/jsgrid.html" class="nav-link">
+                                    <a href="/users" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data User</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    Transaksi
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/dashboard" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Pembelian Barang</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/barang" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Penjualan Barang</p>
                                     </a>
                                 </li>
                             </ul>
@@ -250,7 +275,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         url: '<?= base_url('product/delete') ?>',
-                        type: 'POST',
+                        type: 'DELETE',
                         dataType: 'json',
                         data: {
                             id: id_layanan

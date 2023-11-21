@@ -1,5 +1,5 @@
 <?php include APPPATH . 'views/header.php'; ?>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css"> 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
 
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
@@ -72,7 +72,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/barang" class="nav-link active">
+                                    <a href="/barang" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Barang</p>
                                     </a>
@@ -84,7 +84,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/users" class="nav-link">
+                                    <a href="/users" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data User</p>
                                     </a>
@@ -129,7 +129,7 @@
 
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Data Barang</h3>
+                                    <h3 class="card-title">Customer</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
@@ -138,16 +138,14 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama</th>
-                                                <th>Gambar</th>
-                                                <th>Harga</th>
-                                                <th>Stock</th>
-                                                <th>Jenis Produk</th>
-                                                <th>Diskon</th>
+                                                <th>Email</th>
+                                                <th>Username</th>
+                                                <th>Role</th>
+                                                <th>Status Karyawan</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -176,35 +174,32 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Product</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Users</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="layananForm" enctype="multipart/form-data">
                             <div class="mb-3">
-                                <label for="nama_produk" class="col-form-label">Product Name:</label>
-                                <input type="text" class="form-control" id="nama_produk" name="nama_produk">
+                                <label for="name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="name" name="name">
                             </div>
                             <div class="mb-3">
-                                <label for="jenis_produk" class="col-form-label">Product Type:</label>
-                                <textarea class="form-control" id="jenis_produk" name="jenis_produk"></textarea>
+                                <label for="no_telp_customer" class="col-form-label">Email:</label>
+                                <input class="form-control" id="email" name="email"></input>
                             </div>
                             <div class="mb-3">
-                                <label for="harga_produk" class="col-form-label">Product Price:</label>
-                                <input type="number" class="form-control" id="harga_produk" name="harga_produk">
+                                <label for="alamat_customer" class="col-form-label">Username:</label>
+                                <input type="text" class="form-control" id="username" name="username"> </input>
                             </div>
                             <div class="mb-3">
-                                <label for="jumlah_stok" class="col-form-label">Stock Quantity:</label>
-                                <input type="number" class="form-control" id="jumlah_stok" name="jumlah_stok">
+                                <label for="role_user" class="col-form-label">Role:</label>
+                                <select class="form-select" id="role" name="role">
+                                    <?php foreach ($roles as $role) : ?>
+                                        <option value="<?= $role['id_role'] ?>"><?= $role['nama_role'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
-                            <div class="mb-3">
-                                <label for="jumlah_stok" class="col-form-label">diskon:</label>
-                                <input type="number" class="form-control" id="diskon" name="jumlah_stok">
-                            </div>
-                            <div class="mb-3">
-                                <label for="foto" class="col-form-label">Product Photo:</label>
-                                <input type="file" class="form-control" id="foto" name="foto">
-                            </div>
+
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -214,9 +209,6 @@
                 </div>
             </div>
         </div>
-
-
-
         <!-- Main Footer -->
         <footer class="main-footer">
             <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
@@ -230,30 +222,30 @@
 
     <?php include APPPATH . 'views/footer.php'; ?>
     <script>
-        function deleteProduct(id_layanan) {
+        function isActive(id_users, status, status_id) {
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Anda tidak akan dapat mengembalikan ini!",
+                title: `Apakah Anda yakin untuk user ini ${status}?`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
+                confirmButtonText: 'Ya, !',
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 // If the user clicks "Yes," proceed with deletion
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '<?= base_url('product/delete') ?>',
-                        type: 'DELETE',
+                        url: '<?= base_url('users/update-active') ?>',
+                        type: 'POST',
                         dataType: 'json',
                         data: {
-                            id: id_layanan
+                            id: id_users,
+                            is_active : status_id, 
                         },
                         success: function(response) {
                             if (response.success) {
                                 Toastify({
-                                    text: "sukses menghapus",
+                                    text: "sukses mengedit",
                                     duration: 1000,
                                     close: true,
                                     gravity: "top",
@@ -261,12 +253,12 @@
                                     backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                                     stopOnFocus: true,
                                     callback: function() {
-                                        window.location.href = "/barang";
+                                        window.location.href = "/users";
                                     }
                                 }).showToast();
                             } else {
                                 Toastify({
-                                    text: "gagal menghapus",
+                                    text: "gagal mengedit",
                                     duration: 1000,
                                     close: true,
                                     gravity: "top",
@@ -284,37 +276,40 @@
             });
         }
 
-        function showDetailProduct(id_product, nama_product, jenis_product, harga_product, gambar_product, diskon) {
+        $('#no_telp_customer').on('input', function() {
+            // Menghapus karakter selain angka menggunakan regular expression
+            $(this).val(function(_, value) {
+                return value.replace(/\D/g, '');
+            });
+        });
+
+        function showDetailCustomer(id_users, nama_user, email_user, username_user, role_user) {
             Swal.fire({
-                title: 'Detail Layanan',
+                title: 'Detail Users',
                 html: `
             <table style="width: 100%; text-align: left;">
                 <tr>
-                    <td colspan="2" style="text-align: center;"><img src="${gambar_product}" style="max-width: 200px; max-height: 200px;"/></td>
+                    <td><strong>ID users:</strong></td>
+                    <td>${id_users}</td>
                 </tr>
                 <tr>
-                    <td><strong>ID Product:</strong></td>
-                    <td>${id_product}</td>
+                    <td><strong>Nama Users:</strong></td>
+                    <td>${nama_user}</td>
                 </tr>
                 <tr>
-                    <td><strong>Nama Product:</strong></td>
-                    <td>${nama_product}</td>
+                    <td><strong>Email Users:</strong></td>
+                    <td>${email_user}</td>
                 </tr>
                 <tr>
-                    <td><strong>Jenis Product:</strong></td>
-                    <td>${jenis_product}</td>
+                    <td><strong>Username:</strong></td>
+                    <td>${username_user}</td>
                 </tr>
                 <tr>
-                    <td><strong>Harga Product:</strong></td>
-                    <td>Rp. ${harga_product}</td>
-                </tr>
-                <tr>
-                    <td><strong>Diskon:</strong></td>
-                    <td>${diskon}</td>
+                    <td><strong>Role:</strong></td>
+                    <td>${role_user}</td>
                 </tr>
             </table>
         `,
-                icon: 'info',
                 showCloseButton: true,
                 showCancelButton: false,
                 focusConfirm: false,
@@ -334,63 +329,62 @@
                 "autoWidth": false,
             });
 
+
             <?php $index = 1; ?>
 
-            <?php foreach ($products as $product) : ?>
+            <?php foreach ($users as $cus) : ?>
                 <?php
-                $id_produk = esc($product['id_product']);
+                $id_users = esc($cus->id_users);
                 $id = $index++;
-                $nama_produk = esc($product['nama_product']);
-                $harga_produk = esc($product['harga_product']);
-                $jumlah_stok = esc($product['stock']);
-                $jenis_produk = esc($product['jenis_product']);
-                $gambar_produk = esc($product['gambar_product']);
-                $diskon = esc($product['diskon']);
+                $nama_user = esc($cus->nama);
+                $role_user = esc($cus->nama_role);
+                $username_user = esc($cus->username);
+                $email_user = esc($cus->email);
+                $is_active = esc($cus->is_active);
                 ?>
                 table.row.add([
                     '<?= $id ?>',
-                    '<?= $nama_produk ?>',
-                    '<img src="<?= base_url('writable/uploads/' . $gambar_produk) ?>" style="max-width: 100px; max-height: 100px;">',
-                    '<?= $harga_produk ?>',
-                    '<?= $jumlah_stok ?>',
-                    '<?= $jenis_produk ?>',
-                    '<?= $diskon ?>',
-                    '<a href="javascript:void(0);" class="delete-link" data-id="<?= $id_produk ?>"><i class="fa fa-trash" aria-hidden="true"></i> Hapus</a> | <a href="javascript:void(0);" class="detail-link" data-id="<?= $id_produk ?>"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Detail</a> | <a href="javascript:void(0);" class="edit-link" data-id="<?= $id_produk ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>'
+                    '<?= $nama_user ?>',
+                    '<?= $email_user ?>',
+                    '<?= $username_user ?>',
+                    '<?= $role_user ?>',
+                    '<?= ($is_active == 1) ? "Aktif" : "Tidak Aktif" ?>',
+                    '<a href="javascript:void(0);" class="delete-link" data-id="<?= $id_users ?>"><i class="fa fa-trash" aria-hidden="true"></i> <?= ($is_active == 1) ? "Tidak Aktif" : "Aktif" ?> </a> | <a href="javascript:void(0);" class="detail-link" data-id="<?= $id_users ?>"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Detail</a>'
                 ]).draw(false);
             <?php endforeach; ?>
 
+
+
             $('#example1 tbody').on('click', 'a.delete-link', function() {
-                var id_layanan = $(this).data('id');
-                deleteProduct(id_layanan);
+                var id_users = $(this).data('id');
+                var status = table.row($(this).closest('tr')).data()[5];
+                let status_data = status == 'Aktif' ? 0 : 1
+                isActive(id_users,status,status_data);
             });
 
             $('#example1 tbody').on('click', 'a.detail-link', function() {
-                var id_product = $(this).data('id');
-                var nama_product = table.row($(this).closest('tr')).data()[1];
-                var harga_product = table.row($(this).closest('tr')).data()[3];
-                var jumlah_stock = table.row($(this).closest('tr')).data()[4];
-                var jenis_product = table.row($(this).closest('tr')).data()[5];
-                var gambar_product = $(this).closest('tr').find('img').attr('src');
-                var diskon = table.row($(this).closest('tr')).data()[6];
+                var id_users = $(this).data('id');
+                var nama_user = table.row($(this).closest('tr')).data()[1];
+                var email_user = table.row($(this).closest('tr')).data()[2];
+                var username_user = table.row($(this).closest('tr')).data()[3];
+                var role_user = table.row($(this).closest('tr')).data()[4];
 
-                showDetailProduct(id_product, nama_product, jenis_product, harga_product, gambar_product, diskon);
+                showDetailCustomer(id_users, nama_user, email_user, username_user, role_user);
             });
 
             $('#example1 tbody').on('click', 'a.edit-link', function() {
-                var id_product = $(this).data('id');
-                var nama_product = table.row($(this).closest('tr')).data()[1];
-                var harga_product = table.row($(this).closest('tr')).data()[3];
-                var jumlah_stock = table.row($(this).closest('tr')).data()[4];
-                var jenis_product = table.row($(this).closest('tr')).data()[5];
-                var gambar_product = $(this).closest('tr').find('img').attr('src');
-                var diskon = table.row($(this).closest('tr')).data()[6];
+                var id_users = $(this).data('id');
+                var nama_user = table.row($(this).closest('tr')).data()[1];
+                var email_user = table.row($(this).closest('tr')).data()[2];
+                var username_user = table.row($(this).closest('tr')).data()[3];
+                var role_user = table.row($(this).closest('tr')).data()[4];
 
                 // Populate the modal with the existing data
-                $('#nama_produk').val(nama_product);
-                $('#jenis_produk').val(jenis_product);
-                $('#harga_produk').val(harga_product);
-                $('#jumlah_stok').val(jumlah_stock);
-                $('#diskon').val(diskon);
+                $('#name_customer').val(name_customer);
+                $('#no_telp_customer').val(no_telp);
+                $('#email_customer').val(email);
+                $('#alamat_customer').val(alamat);
+                $('#status_customer').val(status_final);
 
                 // Update the submit button to act as an update button
                 $('#submitBtn').text('Update').data('id', id_product);
@@ -403,12 +397,10 @@
                 var form = document.getElementById('layananForm');
                 var formData = new FormData(form);
 
-                var id_produk = $(this).data('id');
-                var actionUrl = id_produk ? '<?= base_url('/layanan/update') ?>' : '<?= base_url('layanan/add') ?>';
+                var id_customers = $(this).data('id');
+                var actionUrl = id_customers ? '<?= base_url('/customer/update') ?>' : '<?= base_url('/users/add') ?>';
 
-                formData.append('id_produk', id_produk);
-                formData.append('type', 2);
-
+                formData.append('id_users', id_customers);
 
                 $.ajax({
                     url: actionUrl,
@@ -417,18 +409,19 @@
                     contentType: false,
                     processData: false,
                     success: function(data) {
-                        Toastify({
-                            text: id_produk ? "berhasil edit barang" : "berhasil menambahkan barang",
-                            duration: 3000,
-                            close: true,
-                            gravity: "top",
-                            position: "right",
-                            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                            stopOnFocus: true,
-                            callback: function() {
-                                window.location.href = "/barang";
-                            }
-                        }).showToast();
+                        console.log(data)
+                        // Toastify({
+                        //     text: id_customers ? "berhasil edit customers" : "berhasil menambahkan customers",
+                        //     duration: 3000,
+                        //     close: true,
+                        //     gravity: "top",
+                        //     position: "right",
+                        //     backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                        //     stopOnFocus: true,
+                        //     callback: function() {
+                        //         window.location.href = "/users";
+                        //     }
+                        // }).showToast();
                     },
                     error: function(error) {
                         console.error('Error:', error);
@@ -438,38 +431,6 @@
                 });
             });
 
-
-            // document.getElementById('submitBtn').addEventListener('click', function() {
-            //     var form = document.getElementById('layananForm');
-            //     var formData = new FormData(form);
-
-            //     $.ajax({
-            //         url: '/product/add',
-            //         type: 'POST',
-            //         data: formData,
-            //         contentType: false,
-            //         processData: false,
-            //         success: function(data) {
-            //             Toastify({
-            //                 text: "berhasil menambahkan barang",
-            //                 duration: 3000,
-            //                 close: true,
-            //                 gravity: "top",
-            //                 position: "right",
-            //                 backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-            //                 stopOnFocus: true,
-            //                 callback: function() {
-            //                     window.location.href = "/dashboard";
-            //                 }
-            //             }).showToast();
-            //         },
-            //         error: function(error) {
-            //             console.error('Error:', error);
-            //             // Handle errors here (e.g., show an error message)
-            //             alert('Error adding product. Please try again.');
-            //         }
-            //     });
-            // });
         });
     </script>
 </body>

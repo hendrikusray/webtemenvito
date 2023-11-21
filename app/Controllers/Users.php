@@ -57,6 +57,62 @@ class Users extends BaseController
         }
     }
 
+    public function createUsers()
+    {
+        if ($this->request->isAJAX()) {
+            $email = $this->request->getPost('email');
+            $username = $this->request->getPost('username');
+            $password = 'user123';
+            $name = $this->request->getPost('name');
+            $role = $this->request->getPost('role');
+
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $usersModel = new UsersModel();
+
+            $data = [
+                'email' => $email
+            ];
+
+            if (!$role) {
+                $role = 2;
+            }
+
+            $checkUsers = $usersModel->checkUsers($data);
+            if ($checkUsers) {
+                return $this->response->setJSON(['success' => false, 'message' => 'email telah terdaftar !!']);
+            }
+
+            $data = [
+                'username' => $username
+            ];
+
+            $checkUsers = $usersModel->checkUsers($data);
+            if ($checkUsers) {
+                return $this->response->setJSON(['success' => false, 'message' => 'username telah terdaftar !!']);
+            }
+
+
+            $data = [
+                'email' => $email,
+                'username' => $username,
+                'nama' => $name,
+                'password' => $hashedPassword,
+                'id_role' => $role,
+                'is_active' => 0,
+            ];
+            $insertedId = $usersModel->insertUser($data);
+
+            if ($insertedId) {
+                $this->sendRegistrationEmail($email, $name, $insertedId, 'register');
+                return $this->response->setJSON(['success' => true, 'inserted_id' => $insertedId]);
+            } else {
+                return $this->response->setJSON(['success' => false, 'error' => 'Failed to insert user']);
+            }
+        } else {
+            return $this->response->setStatusCode(405)->setJSON(['error' => 'Method not allowed']);
+        }
+    }
+
     public function resendpassword($id)
     {
         return view('login/resetpass', ['id' => $id]);
@@ -110,14 +166,30 @@ class Users extends BaseController
     public function isactived($id)
     {
         $model = new UsersModel();
-        if ($model->isUserActive($id)) {
+        $actived = $this->request->getPost('actived');
+        $updateData = [
+            'is_active' => $actived
+        ];
+        $model->updateUser($id, $updateData);
+        return view('register/registration_success');
+    }
+
+
+    public function isactivedusers()
+    {
+        $model = new UsersModel();
+        if ($this->request->isAJAX()) {
+            $is_active = $this->request->getPost('is_active');
+            $id  = $this->request->getPost('id');
             $updateData = [
-                'is_active' => 1
+                'is_active' => $is_active,
             ];
-            $model->updateUser($id, $updateData);
-            return view('register/registration_success');
-        } else {
-            return view('register/registration_unsuccess');
+            $update = $model->updateUser($id, $updateData);
+            if ($update) {;
+                return $this->response->setJSON(['success' => true, 'inserted_id' => $update]);
+            } else {
+                return $this->response->setJSON(['success' => false, 'error' => 'Failed to insert user']);
+            }
         }
     }
 

@@ -25,6 +25,21 @@ $routes->post('/member/login', 'Users::login');
 $routes->post('/layanan/add', 'Product::postProduk');
 $routes->post('/layanan/update', 'Product::updateLayanan');
 $routes->add('writable/uploads/(:any)', 'Files::index/$1');
+$routes->delete('/product/delete', 'Product::delete');
 
-$routes->post('product/delete', 'Product::delete');
+#=================== data customer ========================#
+$routes->get('/customer', 'Home::customer');
+$routes->post('/customer/add', 'Customer::addCustomers');
+$routes->post('/customer/update', 'Customer::updatedCustomers');
+$routes->delete('/product/delete', 'Customer::delete');
+
+
+#=================== data users =============================#
+$routes->get('/users', 'Home::users');
+$routes->post('/users/add', 'Users::createUsers');
+$routes->post('/users/update-active', 'Users::isactivedusers');
+
+
+// isactivedusers
+// product/delete createUsers
 
