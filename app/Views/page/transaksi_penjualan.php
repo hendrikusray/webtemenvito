@@ -109,13 +109,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/transaksi-pembelian" class="nav-link active">
+                                    <a href="/transaksi-pembelian" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Pembelian Barang</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/transaksi-penjualan" class="nav-link">
+                                    <a href="/transaksi-penjualan" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Penjualan Barang</p>
                                     </a>
@@ -160,7 +160,7 @@
 
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Transaksi Pembelian Barang</h3>
+                                    <h3 class="card-title">Transaksi Penjualan Barang</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">

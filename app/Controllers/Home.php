@@ -69,8 +69,17 @@ class Home extends BaseController
     {
         $transaksiModel = new TransaksiModel();    
         $SupplierModel = new SupplierModel();  
-        $data['transaksi'] = $transaksiModel->transaksiList();
+        $data['transaksi'] = $transaksiModel->transaksiList('1');
         $data['supplier'] = $SupplierModel->supplierList();
         return view('page/transaksi_pembelian', $data);
+    }
+
+    public function transaksiPenjualan(): string
+    {
+        $transaksiModel = new TransaksiModel();    
+        $SupplierModel = new SupplierModel();  
+        $data['transaksi'] = $transaksiModel->transaksiList('2');
+        $data['supplier'] = $SupplierModel->supplierList();
+        return view('page/transaksi_penjualan', $data);
     }
 }

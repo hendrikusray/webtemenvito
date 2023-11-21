@@ -115,7 +115,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/barang" class="nav-link">
+                                    <a href="/transaksi-penjualan" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Penjualan Barang</p>
                                     </a>

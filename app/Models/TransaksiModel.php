@@ -16,10 +16,11 @@ class TransaksiModel extends Model
     }
 
 
-    public function transaksiList()
+    public function transaksiList($status)
     {
         return $this->db->table('transaksi')
         ->select('*')
+        ->where('type', $status)
         ->get()
         ->getResultArray();
     }

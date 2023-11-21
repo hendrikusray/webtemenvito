@@ -50,9 +50,14 @@ $routes->post('/supplier/update', 'Supplier::update');
 // /get-transaction-details'
 #================ data transaksi pembelian barang ======================
 $routes->get('/transaksi-pembelian', 'Home::transaksiPembelian');
+$routes->get('/transaksi-penjualan', 'Home::transaksiPenjualan');
+
+
 $routes->get('/product-by-supplier', 'Product::productBySupplierId');
 $routes->get('/get-transaction-details', 'Transaksi::transaksiDetail');
 $routes->post('/submit-transaction', 'Transaksi::submitTransaction');
+
+
 
 
 // isactivedusers
