@@ -59,6 +59,13 @@ $routes->post('/submit-transaction', 'Transaksi::submitTransaction');
 
 
 
+#=============== transaksi penjualan====================
+$routes->get('produk/getData/(:num)', 'Product::getProdukData/$1');
+
+
+
+
+
 
 // isactivedusers
 // product/delete createUsers

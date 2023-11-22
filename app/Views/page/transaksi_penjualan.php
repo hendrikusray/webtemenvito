@@ -219,11 +219,11 @@
                                     </div>
                                     <div class="col-sm">
                                         <div class="form-group">
-                                            <label for="nama_supplier">Nama Supplier:</label>
-                                            <select class="form-select" id="supplier" name="supplier" required>
-                                                <option value="" disabled selected>== PILIH SUPPLIER ==</option>
-                                                <?php foreach ($supplier as $suppliers) : ?>
-                                                    <option value="<?= $suppliers['id_supplier'] ?>"><?= $suppliers['nama'] ?></option>
+                                            <label for="nama_supplier">Nama Customer:</label>
+                                            <select class="form-select" id="customer" name="customer" required>
+                                                <option value="" disabled selected>== Pilih Customer ==</option>
+                                                <?php foreach ($customer as $customer) : ?>
+                                                    <option value="<?= $customer['id_customers'] ?>"><?= $customer['nama'] ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <div class="invalid-feedback">
@@ -232,8 +232,26 @@
                                         </div>
                                     </div>
                                     <div class="col-sm">
-                                        <label for="nama_customer">Produk:</label>
-                                        <select class="form-select" id="produk" name="produk"></select>
+                                        <label for="tipe">Tipe:</label>
+                                        <select class="form-select" id="tipe1" name="tipe">
+                                            <option value="" selected disabled>===== PILIH TIPE ========</option>
+                                            <option value="layanan">Layanan</option>
+                                            <option value="produk">Produk</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm" id="layananContainer" style="display: none;">
+                                        <label for="tipe">Layanan:</label>
+                                        <select class="form-select" id="tipe2" name="tipe">
+                                            <!-- Options for Layanan will be populated dynamically using AJAX -->
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm" id="produkContainer" style="display: none;">
+                                        <label for="tipe">Produk:</label>
+                                        <select class="form-select" id="tipe3" name="tipe">
+                                            <!-- Options for Produk will be populated dynamically using AJAX -->
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -363,6 +381,65 @@
                 });
             });
 
+            $(document).ready(function() {
+                // Hide the second and third select elements initially
+                $('#layananContainer').hide();
+                $('#produkContainer').hide();
+
+                $('#tipe1').change(function() {
+                    var selectedValue = $(this).val();
+
+                    // Hide both containers initially
+                    $('#layananContainer').hide();
+                    $('#produkContainer').hide();
+
+                    // Show the container based on the selected value
+                    if (selectedValue === 'layanan') {
+                        $('#layananContainer').show();
+                        $('#produkContainer').hide(); // Hide the Produk container
+                    } else if (selectedValue === 'produk') {
+                        $('#layananContainer').hide(); // Hide the Layanan container
+                        $('#produkContainer').show();
+                    }
+
+                    if (selectedValue === 'layanan') {
+                        typeParam = 1;
+                    } else if (selectedValue === 'produk') {
+                        typeParam = 2;
+                    }
+
+                    // url: 'produk/getData/' + typeParam,
+                    // AJAX request based on the selected value
+                    $.ajax({
+                        url: 'produk/getData/' + typeParam,
+                        type: 'GET',
+                        data: {
+                            tipe: selectedValue
+                        },
+                        success: function(data) {
+                            // Update the options for the appropriate select element
+                            if (selectedValue === 'layanan') {
+                                // Clear and populate the Layanan dropdown based on JSON data
+                                $('#tipe2').empty();
+                                for (var i = 0; i < data.length; i++) {
+                                    $('#tipe2').append('<option data-stock="' + data[i].stock + '" data-nama_product="' + data[i].text + '" data-harga_product="' + data[i].harga_produk + '" value="' + data[i].value + '">' + data[i].text + '</option>');
+                                }
+                            } else if (selectedValue === 'produk') {
+                                // Clear and populate the Produk dropdown based on JSON data
+                                $('#tipe3').empty();
+                                for (var i = 0; i < data.length; i++) {
+                                    $('#tipe3').append('<option data-stock="' + data[i].stock + '" data-nama_product="' + data[i].text + '" data-harga_product="' + data[i].harga_produk + '" value="' + data[i].value + '">' + data[i].text + '</option>');
+                                }
+                            }
+                        },
+                        error: function() {
+                            console.error('Error fetching data');
+                        }
+                    });
+                });
+            });
+
+
 
             function calculateKembalian() {
                 // Get the total pembayaran and pembayaran values
@@ -382,15 +459,6 @@
 
                 // Event listener for the "Add Produk" button
                 $('#addproduk').click(function() {
-                    // Get the selected supplier_id
-                    var supplierId = $('#supplier').val();
-
-                    // Validate if supplier_id is provided
-                    if (!supplierId) {
-                        alert('Pilih supplier terlebih dahulu.');
-                        return;
-                    }
-
                     var jumlahStok = $('#jumlah_stok').val();
 
                     // Validate if jumlahStok is provided
@@ -399,17 +467,28 @@
                         return;
                     }
 
-                    var selectedOption = $('#produk option:selected');
-                    var selectedProductId = $('#produk').val();
+                    var selectedValue = $('#tipe1').val();
+                    var selectedOption = null;
+                    var selectedProductId = null;
+
+                    // Determine the selected product based on the value of tipe1
+                    if (selectedValue === 'layanan') {
+                        selectedOption = $('#tipe2 option:selected');
+                        selectedProductId = $('#tipe2').val();
+                    } else if (selectedValue === 'produk') {
+                        selectedOption = $('#tipe3 option:selected');
+                        selectedProductId = $('#tipe3').val();
+                    } else {
+                        console.error('Invalid selected value');
+                        return;
+                    }
 
                     // Retrieve the values using data()
-                    var namaProduk = selectedOption.data('nama_produk');
+                    var namaProduk = selectedOption.data('nama_product');
                     var harga = selectedOption.data('harga_product');
-                    // var stock = selectedOption.data('stock');,
+                    // var stock = selectedOption.data('stock');
 
-                    let total = 0
-                    // Append rows to the table
-                    total = harga * jumlahStok;
+                    var total = harga * jumlahStok;
 
                     // Append row to the table
                     $('tbody').append('<tr>' +
@@ -422,18 +501,17 @@
                         '<td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>' +
                         '</tr>');
 
-
-                    total_pembayaran = total_pembayaran + total
-                    stok = stok + parseInt(jumlahStok)
+                    total_pembayaran = total_pembayaran + total;
+                    stok = stok + parseInt(jumlahStok);
 
                     // Update the total_pembayaran span
                     $('#total_pembayaran').text('Rp. ' + total_pembayaran);
                     $('#jumlah_all_stok').text(stok);
+
                     // Clear input values
                     $('#jumlah_stok').val('');
-
-
                 });
+
 
                 // Event listener to remove a row
                 $('#example1 tbody').on('click', 'a.detail-link', function() {
@@ -653,76 +731,6 @@
                     // Show the modal
                     $('#exampleModal').modal('show');
                 });
-
-                // document.getElementById('submitBtn').addEventListener('click', function() {
-                //     var form = document.getElementById('layananForm');
-                //     var formData = new FormData(form);
-
-                //     var id_supplier = $(this).data('id');
-                //     var actionUrl = id_supplier ? '<?= base_url('/supplier/update') ?>' : '<?= base_url('supplier/add') ?>';
-
-                //     formData.append('id_supplier', id_supplier);
-
-                //     $.ajax({
-                //         url: actionUrl,
-                //         type: 'POST',
-                //         data: formData,
-                //         contentType: false,
-                //         processData: false,
-                //         success: function(data) {
-                //             Toastify({
-                //                 text: id_supplier ? "berhasil edit supplier" : "berhasil menambahkan supplier",
-                //                 duration: 3000,
-                //                 close: true,
-                //                 gravity: "top",
-                //                 position: "right",
-                //                 backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                //                 stopOnFocus: true,
-                //                 callback: function() {
-                //                     window.location.href = "/supplier";
-                //                 }
-                //             }).showToast();
-                //         },
-                //         error: function(error) {
-                //             console.error('Error:', error);
-                //             // Handle errors here (e.g., show an error message)
-                //             alert('Error adding product. Please try again.');
-                //         }
-                //     });
-                // });
-
-
-                // document.getElementById('submitBtn').addEventListener('click', function() {
-                //     var form = document.getElementById('layananForm');
-                //     var formData = new FormData(form);
-
-                //     $.ajax({
-                //         url: '/product/add',
-                //         type: 'POST',
-                //         data: formData,
-                //         contentType: false,
-                //         processData: false,
-                //         success: function(data) {
-                //             Toastify({
-                //                 text: "berhasil menambahkan barang",
-                //                 duration: 3000,
-                //                 close: true,
-                //                 gravity: "top",
-                //                 position: "right",
-                //                 backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                //                 stopOnFocus: true,
-                //                 callback: function() {
-                //                     window.location.href = "/dashboard";
-                //                 }
-                //             }).showToast();
-                //         },
-                //         error: function(error) {
-                //             console.error('Error:', error);
-                //             // Handle errors here (e.g., show an error message)
-                //             alert('Error adding product. Please try again.');
-                //         }
-                //     });
-                // });
             });
         </script>
 </body>

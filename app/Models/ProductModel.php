@@ -67,4 +67,10 @@ class ProductModel extends Model
             ->where('id_product', $id_produk)
             ->update(['stock' => $newStock]);
     }
+
+    public function getAllProduct($status)
+    {
+        $query = $this->db->table('product')->where('type', $status)->get();
+        return $query->getResult();
+    }
 }

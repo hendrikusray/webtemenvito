@@ -156,5 +156,28 @@ class Product extends BaseController
         // Return the result in JSON format
         return $this->respond($products);
     }
-    
+
+
+    public function getProdukData($type)
+    {
+        // Load the model
+        $model = new \App\Models\ProductModel();
+
+        // Fetch data from the database
+        $layananData = $model->getAllProduct($type); // You might want to customize this based on your table structure and filtering requirements
+
+        // Convert the data to an associative array
+        $layananOptions = [];
+        foreach ($layananData as $layanan) {
+            $layananOptions[] = [
+                'value' => $layanan->id_product,
+                'text' => $layanan->nama_product,
+                'harga_produk' => $layanan->harga_product,
+                'stock' => $layanan->stock
+            ];
+        }
+
+        // Return the data as JSON
+        return $this->response->setJSON($layananOptions);
+    }
 }
