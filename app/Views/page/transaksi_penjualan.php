@@ -604,7 +604,7 @@
                 // Send the AJAX request
 
                 $.ajax({
-                    url: '/submit-transaction', // Update with your actual endpoint
+                    url: '/submit-transaction-penjualan', // Update with your actual endpoint
                     method: 'POST', // Assuming you want to use POST
                     contentType: 'application/json',
                     data: JSON.stringify(jsonData),
@@ -619,47 +619,13 @@
                             backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                             stopOnFocus: true,
                             callback: function() {
-                                window.location.href = "/transaksi-pembelian";
+                                window.location.href = "/transaksi-penjualan";
                             }
                         }).showToast();
                     },
                     error: function(error) {
                         // Handle error
                         console.error('Error:', error);
-                    }
-                });
-            });
-
-
-            $(document).ready(function() {
-                // When the supplier dropdown changes
-                $('#supplier').change(function() {
-                    // Get the selected supplier_id
-                    var supplierId = $(this).val();
-
-                    // Clear the products dropdown
-                    $('#produk').empty();
-
-                    // If a supplier is selected
-                    if (supplierId !== '') {
-                        // Fetch products using AJAX
-                        $.ajax({
-                            url: '/product-by-supplier', // Update with your actual route
-                            method: 'GET',
-                            data: {
-                                supplier_id: supplierId
-                            },
-                            dataType: 'json',
-                            success: function(data) {
-                                // Populate the products dropdown with the fetched data
-                                $.each(data, function(index, product) {
-                                    $('#produk').append('<option data-nama_produk="' + product.nama_product + '" data-harga_product="' + product.harga_product + '" data-stock="' + product.stock + '" value="' + product.id_product + '">' + product.nama_product + '</option>');
-                                });
-                            },
-                            error: function(error) {
-                                console.error('Error fetching products:', error);
-                            }
-                        });
                     }
                 });
             });

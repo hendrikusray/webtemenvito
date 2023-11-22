@@ -56,6 +56,7 @@ $routes->get('/transaksi-penjualan', 'Home::transaksiPenjualan');
 $routes->get('/product-by-supplier', 'Product::productBySupplierId');
 $routes->get('/get-transaction-details', 'Transaksi::transaksiDetail');
 $routes->post('/submit-transaction', 'Transaksi::submitTransaction');
+$routes->post('/submit-transaction-penjualan', 'Transaksi::submitTransactionPenjualan');
 
 
 
