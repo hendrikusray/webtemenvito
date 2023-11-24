@@ -20,12 +20,20 @@ class Transaksi extends BaseController
 
         $total_pembayaran = $jsonRequest->total_pembayaran;
         $total_jumlah = $jsonRequest->total_jumlah;
+        $supplier_name = $jsonRequest->supplier_name;
+        $supplier_id = $jsonRequest->supplier_id;
+        $nominal_bayar = $jsonRequest->nominal_bayar;
+        $kembalian = $jsonRequest->kembalian;
         $list_data = $jsonRequest->list_data;
 
         // Insert into 'your_table_transaksi' table
         $transaksiData = [
             'total_harga' => $total_pembayaran,
             'jumlah_barang' => $total_jumlah,
+            'supplier_name' => $supplier_name,
+            'supplier_id' => $supplier_id,
+            'nominal_bayar' => $nominal_bayar,
+            'kembalian' => $kembalian,
             'type' => 1,
             'tanggal_transaksi' => date('Y-m-d H:i:s'),
         ];
@@ -42,6 +50,7 @@ class Transaksi extends BaseController
                 'id_produk' => $data->id_produk,
                 'jumlah_barang' => $data->jumlah_barang,
                 'total' => $data->total,
+                'nama_produk' => $data->produk,
                 // Add other fields as needed
             ];
 
@@ -65,6 +74,10 @@ class Transaksi extends BaseController
 
         $total_pembayaran = $jsonRequest->total_pembayaran;
         $total_jumlah = $jsonRequest->total_jumlah;
+        $customer_id = $jsonRequest->customer_id;
+        $nominal_bayar = $jsonRequest->nominal_bayar;
+        $customer_name = $jsonRequest->customer_name;
+        $kembalian = $jsonRequest->kembalian;
         $list_data = $jsonRequest->list_data;
 
         // Insert into 'your_table_transaksi' table
@@ -72,6 +85,10 @@ class Transaksi extends BaseController
             'total_harga' => $total_pembayaran,
             'jumlah_barang' => $total_jumlah,
             'type' => 2,
+            'customer_id' => $customer_id,
+            'nominal_bayar' => $nominal_bayar,
+            'kembalian' => $kembalian,
+            'customer_name' => $customer_name,
             'tanggal_transaksi' => date('Y-m-d H:i:s'),
         ];
 
@@ -85,13 +102,14 @@ class Transaksi extends BaseController
             $detailData = [
                 'id_transaksi' => $transaksiId,
                 'id_produk' => $data->id_produk,
+                'nama_produk' => $data->produk,
                 'jumlah_barang' => $data->jumlah_barang,
                 'total' => $data->total,
                 // Add other fields as needed
             ];
 
             $currentStock = $produkModel->getCurrentStock($data->id_produk);
-            $newStock = $currentStock + $data->jumlah_barang;
+            $newStock = $currentStock - $data->jumlah_barang;
             $produkModel->updateStock($data->id_produk, $newStock);
             $transaksiDetailModel->insertTransaksiDetail($detailData);
         }

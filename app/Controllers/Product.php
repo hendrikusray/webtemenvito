@@ -163,8 +163,14 @@ class Product extends BaseController
         // Load the model
         $model = new \App\Models\ProductModel();
 
+        $conditions = [
+            'type' => $type,
+            'stock >' => 0
+        ];
+
+
         // Fetch data from the database
-        $layananData = $model->getAllProduct($type); // You might want to customize this based on your table structure and filtering requirements
+        $layananData = $model->getAllProduct($conditions); // You might want to customize this based on your table structure and filtering requirements
 
         // Convert the data to an associative array
         $layananOptions = [];
@@ -179,5 +185,30 @@ class Product extends BaseController
 
         // Return the data as JSON
         return $this->response->setJSON($layananOptions);
+    }
+
+    public function getProdukDetail($productId)
+    {
+        // Load the model
+        $model = new \App\Models\ProductModel();
+
+        // Fetch data for the specific product
+        $productData = $model->getProductById($productId);
+
+        // Check if the product exists
+        if ($productData) {
+            // Return the product details as JSON
+            $productDetails = [
+                'id_product' => $productData->id_product,
+                'nama_product' => $productData->nama_product,
+                'harga_product' => $productData->harga_product,
+                'stock' => $productData->stock,
+                // Add other fields as needed
+            ];
+            return $this->response->setJSON($productDetails);
+        } else {
+            // Return an error message if the product is not found
+            return $this->response->setJSON(['error' => 'Product not found']);
+        }
     }
 }

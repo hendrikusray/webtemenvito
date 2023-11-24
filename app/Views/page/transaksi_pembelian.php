@@ -169,6 +169,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Id Transaksi</th>
+                                                <th>Nama Supplier</th>
                                                 <th>Jumlah Barang</th>
                                                 <th>Total Pemesanan</th>
                                                 <th>Tanggal Transaksi</th>
@@ -223,7 +224,7 @@
                                             <select class="form-select" id="supplier" name="supplier" required>
                                                 <option value="" disabled selected>== PILIH SUPPLIER ==</option>
                                                 <?php foreach ($supplier as $suppliers) : ?>
-                                                    <option value="<?= $suppliers['id_supplier'] ?>"><?= $suppliers['nama'] ?></option>
+                                                    <option data-supplier_name="<?= $suppliers['nama'] ?>" value="<?= $suppliers['id_supplier'] ?>"><?= $suppliers['nama'] ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <div class="invalid-feedback">
@@ -305,8 +306,8 @@
         </div>
 
         <!-- Modal for Transaction Details -->
-        <div class="modal" id="detailModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade bd-example-modal-lg" id="detailModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Transaction Details</h5>
@@ -453,14 +454,16 @@
                             modalTable.empty(); // Clear previous content
 
                             // Add headers to the table
-                            modalTable.append('<thead><tr><th>ID Detail</th><th>ID Transaksi</th><th>ID Produk</th><th>Jumlah Barang</th><th>Total</th></tr></thead>');
+                            modalTable.append('<thead><tr><th>No<th>ID Produk</th><th>Nama Barang</th><th>Jumlah Barang</th><th>Total</th></tr></thead>');
 
+                            index = 0;
                             // Add rows with details
                             $.each(data, function(index, detail) {
+                                index = index + 1
                                 // Format the total with currency symbol
                                 var formattedTotal = 'Rp. ' + parseFloat(detail.total).toLocaleString('id-ID');
 
-                                modalTable.append('<tr><td>' + detail.id_detail_transaksi + '</td><td>' + detail.id_transaksi + '</td><td>' + detail.id_produk + '</td><td>' + detail.jumlah_barang + '</td><td>' + formattedTotal + '</td></tr>');
+                                modalTable.append('<tr><td>' + index + '</td><td>' + detail.id_produk  + '</td><td>' + detail.nama_produk + '</td><td>' + detail.jumlah_barang + '</td><td>' + formattedTotal + '</td></tr>');
                                 // Add more columns as needed
                             });
 
@@ -473,84 +476,93 @@
                     });
 
                 });
-            });
 
-            $('#submitBtn').click(function() {
-                // Calculate kembalian
-                var totalPembayaran = parseFloat($('#total_pembayaran').text().replace('Rp. ', '').replace(',', '')) || 0;
-                var pembayaran = parseFloat($('#pembayaran').val()) || 0;
-                var kembalian = pembayaran - totalPembayaran;
+                $('#submitBtn').click(function() {
+                    // Calculate kembalian
+                    var totalPembayaran = parseFloat($('#total_pembayaran').text().replace('Rp. ', '').replace(',', '')) || 0;
+                    var pembayaran = parseFloat($('#pembayaran').val()) || 0;
+                    var kembalian = pembayaran - totalPembayaran;
 
-                // Check if kembalian is negative
-                if (kembalian < 0) {
-                    // Display an alert
-                    alert('Kembalian tidak valid. Pembayaran tidak mencukupi.');
-                    return; // Stop further processing
-                }
+                    // Check if kembalian is negative
+                    if (kembalian < 0) {
+                        // Display an alert
+                        alert('Kembalian tidak valid. Pembayaran tidak mencukupi.');
+                        return; // Stop further processing
+                    }
 
-                // Create an array to store the table data
-                var list_data = [];
-                // Iterate through each row in the table
-                $('#tableinformation tbody tr').each(function() {
-                    // Extract data from the row
-                    var row = $(this);
-                    var no = row.find('td:eq(0)').text();
-                    var id_produk = row.find('td:eq(1)').text();
-                    var produk = row.find('td:eq(2)').text();
-                    var stock = row.find('td:eq(3)').text();
-                    var harga = row.find('td:eq(4)').text();
-                    var total = row.find('td:eq(5)').text();
+                    // Create an array to store the table data
+                    var list_data = [];
+                    // Iterate through each row in the table
+                    $('#tableinformation tbody tr').each(function() {
+                        // Extract data from the row
+                        var row = $(this);
+                        var no = row.find('td:eq(0)').text();
+                        var id_produk = row.find('td:eq(1)').text();
+                        var produk = row.find('td:eq(2)').text();
+                        var stock = row.find('td:eq(3)').text();
+                        var harga = row.find('td:eq(4)').text();
+                        var total = row.find('td:eq(5)').text();
 
-                    // Create a data object for each row
-                    var row_data = {
-                        "no": no,
-                        "id_produk": id_produk,
-                        "produk": produk,
-                        "jumlah_barang": stock,
-                        "harga": harga,
-                        "total": total
+                        // Create a data object for each row
+                        var row_data = {
+                            "no": no,
+                            "id_produk": id_produk,
+                            "produk": produk,
+                            "jumlah_barang": stock,
+                            "harga": harga,
+                            "total": total
+                        };
+
+                        // Push the data object to the list_data array
+                        list_data.push(row_data);
+                    });
+
+                    supplierSelected = $('#supplier').val();
+                    selectedSupplier = $('#supplier option:selected');
+                    supplier_name = selectedSupplier.data('supplier_name');
+
+                    // Prepare the JSON request data
+                    var jsonData = {
+                        'total_pembayaran': total_pembayaran,
+                        'total_jumlah': stok,
+                        'supplier_name' : supplier_name,
+                        'nominal_bayar': totalPembayaran,
+                        'supplier_id' : supplierSelected,
+                        'kembalian': kembalian, // Include kembalian in the request data
+                        'list_data': list_data
                     };
 
-                    // Push the data object to the list_data array
-                    list_data.push(row_data);
-                });
+                    // Send the AJAX request
 
-                // Prepare the JSON request data
-                var jsonData = {
-                    'total_pembayaran': total_pembayaran,
-                    'total_jumlah': stok,
-                    'kembalian': kembalian, // Include kembalian in the request data
-                    'list_data': list_data
-                };
-
-                // Send the AJAX request
-
-                $.ajax({
-                    url: '/submit-transaction', // Update with your actual endpoint
-                    method: 'POST', // Assuming you want to use POST
-                    contentType: 'application/json',
-                    data: JSON.stringify(jsonData),
-                    success: function(response) {
-                        // Handle success
-                        Toastify({
-                            text: "sukses menambahkan transaksi",
-                            duration: 1000,
-                            close: true,
-                            gravity: "top",
-                            position: "right",
-                            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                            stopOnFocus: true,
-                            callback: function() {
-                                window.location.href = "/transaksi-pembelian";
-                            }
-                        }).showToast();
-                    },
-                    error: function(error) {
-                        // Handle error
-                        console.error('Error:', error);
-                    }
+                    $.ajax({
+                        url: '/submit-transaction', // Update with your actual endpoint
+                        method: 'POST', // Assuming you want to use POST
+                        contentType: 'application/json',
+                        data: JSON.stringify(jsonData),
+                        success: function(response) {
+                            // Handle success
+                            Toastify({
+                                text: "sukses menambahkan transaksi",
+                                duration: 1000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                                stopOnFocus: true,
+                                callback: function() {
+                                    window.location.href = "/transaksi-pembelian";
+                                }
+                            }).showToast();
+                        },
+                        error: function(error) {
+                            // Handle error
+                            console.error('Error:', error);
+                        }
+                    });
                 });
             });
+
+
 
 
             $(document).ready(function() {
@@ -619,11 +631,13 @@
                     $id = $index++;
                     $total_harga = esc($trx['total_harga']);
                     $jumlah_barang = esc($trx['jumlah_barang']);
+                    $nama_supplier = esc($trx['supplier_name']);
                     $tanggal_transaksi = date('d F Y', strtotime(esc($trx['tanggal_transaksi'])));
                     ?>
                     table.row.add([
                         '<?= $id ?>',
                         '<?= $id_transaksi ?>',
+                        '<?= $nama_supplier ?>',
                         '<?= $jumlah_barang ?>',
                         '<span> <?= 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?> </span>',
                         '<?= $tanggal_transaksi ?>',
