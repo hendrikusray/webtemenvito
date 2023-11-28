@@ -57,6 +57,16 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
+                            <a href="/laporan-grafik" class="nav-link">
+                                <i class="nav-icon fas fa-columns"></i>
+                                <p>
+                                    Home
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
                                 <p>
@@ -115,9 +125,21 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a href="/laporan-penjualan" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Laporan Penjualan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="/transaksi-penjualan" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Penjualan Barang</p>
+                                        <p>Penjualan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/laporan-pembelian" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Laporan Pembelian</p>
                                     </a>
                                 </li>
                             </ul>
@@ -463,7 +485,7 @@
                                 // Format the total with currency symbol
                                 var formattedTotal = 'Rp. ' + parseFloat(detail.total).toLocaleString('id-ID');
 
-                                modalTable.append('<tr><td>' + index + '</td><td>' + detail.id_produk  + '</td><td>' + detail.nama_produk + '</td><td>' + detail.jumlah_barang + '</td><td>' + formattedTotal + '</td></tr>');
+                                modalTable.append('<tr><td>' + index + '</td><td>' + detail.id_produk + '</td><td>' + detail.nama_produk + '</td><td>' + detail.jumlah_barang + '</td><td>' + formattedTotal + '</td></tr>');
                                 // Add more columns as needed
                             });
 
@@ -525,9 +547,9 @@
                     var jsonData = {
                         'total_pembayaran': total_pembayaran,
                         'total_jumlah': stok,
-                        'supplier_name' : supplier_name,
+                        'supplier_name': supplier_name,
                         'nominal_bayar': totalPembayaran,
-                        'supplier_id' : supplierSelected,
+                        'supplier_id': supplierSelected,
                         'kembalian': kembalian, // Include kembalian in the request data
                         'list_data': list_data
                     };

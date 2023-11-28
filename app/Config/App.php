@@ -99,6 +99,21 @@ class App extends BaseConfig
      */
     public array $supportedLocales = ['en'];
 
+     /**
+     * --------------------------------------------------------------------------
+     * Session Driver
+     * --------------------------------------------------------------------------
+     *
+     * The session storage driver to use:
+     * - `CodeIgniter\Session\Handlers\FileHandler`
+     * - `CodeIgniter\Session\Handlers\DatabaseHandler`
+     * - `CodeIgniter\Session\Handlers\MemcachedHandler`
+     * - `CodeIgniter\Session\Handlers\RedisHandler`
+     *
+     * @var string
+     */
+    public $sessionDriver = 'CodeIgniter\Session\Handlers\FileHandler';
+    
     /**
      * --------------------------------------------------------------------------
      * Application Timezone

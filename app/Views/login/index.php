@@ -73,7 +73,7 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            window.location.href = "/dashboard"; // Redirect to dashboard upon successful login
+                            window.location.href = "/laporan-grafik"; // Redirect to dashboard upon successful login
                         } else {
                             // console.error("Login failed:", response.error);
                             Toastify({

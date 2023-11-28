@@ -64,6 +64,29 @@ $routes->post('/submit-transaction-penjualan', 'Transaksi::submitTransactionPenj
 $routes->get('produk/getData/(:num)', 'Product::getProdukData/$1');
 
 
+#============ grafik dan laporan =============#
+$routes->get('/laporan-grafik', 'Home::laporan');
+$routes->post('/chart-transaksi', 'Home::showChartTransaksi');
+$routes->post('/chart-customer', 'Home::showChartCustomer');
+$routes->post('/chart-pembelian', 'Home::showChartPembelian');
+$routes->post('/chart-supplier', 'Home::showChartSupplier');
+
+
+$routes->get('laporan-penjualan', 'Transaksi::reportPenjualan');
+$routes->post('laporan-penjualan/filter', 'Transaksi::filterPenjualan');
+
+$routes->get('exportpdf-penjualan', 'Transaksi::exportPDFPenjualan');
+$routes->get('exportexcel-penjualan', 'Transaksi::exportExcelPenjualan');
+
+
+$routes->get('laporan-pembelian', 'Transaksi::reportPembelian');
+$routes->post('laporan-pembelian/filter', 'Transaksi::filterPembelian');
+
+$routes->get('exportpdf-pembelian', 'Transaksi::exportPDFPembelian');
+$routes->get('exportexcel-pembelian', 'Transaksi::exportExcelPembelian');
+
+
+
 
 
 
